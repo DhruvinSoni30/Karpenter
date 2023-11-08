@@ -1,0 +1,29 @@
+apiVersion: karpenter.sh/v1alpha5
+kind: Provisioner
+metadata:
+  name: default
+spec: 
+  requirements:
+    - key: karpenter.k8s.aws/instance-family
+      operator: In
+      values: [t3]
+    - key: karpenter.k8s.aws/instance-size
+      operator: In
+      values: [small, medium, large]
+    - key: topology.kubernetes.io/zone
+      operator: In
+      values: [us-east-2a, us-east-2b, us-east-2c]
+  providerRef:
+    name: default
+  ttlSecondsUntilExpired: 2592000
+  ttlSecondsAfterEmpty: 30
+---
+apiVersion: karpenter.k8s.aws/v1alpha1
+kind: AWSNodeTemplate
+metadata:
+  name: default
+spec:
+  subnetSelector:
+    karpenter.sh/discovery: demoEKSCluster
+  securityGroupSelector:
+    karpenter.sh/discovery: demoEKSCluster

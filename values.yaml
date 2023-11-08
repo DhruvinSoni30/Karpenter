@@ -1,0 +1,21 @@
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: karpenter.sh/provisioner-name
+          operator: DoesNotExist
+      - matchExpressions:
+        - key: eks.amazonaws.com/nodegroup
+          operator: In
+          values:
+          - demoNodes
+serviceAccount:
+  create: true
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::765631733981:role/KarpenterControllerRole
+settings:
+  aws:
+    clusterName: demoEKSCluster
+    clusterEndpoint: https://DA900651D106302B662634841C2B58E7.gr7.us-east-2.eks.amazonaws.com
+    defaultInstanceProfile: KarpenterInstanceNodeRole
